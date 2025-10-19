@@ -24,7 +24,7 @@ fn main()  {
 
 }
 
-fn set_bit(byte: &mut u8, pos: u8, val: &bool) -> Result<(), String>{
+fn set_bit(byte: &mut u8, pos: u8, val: &bool){
     match val{
         &true => {
             match pos{
@@ -36,8 +36,8 @@ fn set_bit(byte: &mut u8, pos: u8, val: &bool) -> Result<(), String>{
                 5 =>{*byte |= 0b0000_0100},
                 6 =>{*byte |= 0b0000_0010},
                 7 =>{*byte |= 0b0000_0001},
-                _ =>{   
-                    return Err("Incorrect postion".to_owned())
+                _ =>{
+                    unreachable!();
                 }   
             }
         },
@@ -51,35 +51,8 @@ fn set_bit(byte: &mut u8, pos: u8, val: &bool) -> Result<(), String>{
             6 =>{*byte &= 0b1111_1101},
             7 =>{*byte &= 0b1111_1110},
             _ =>{
-                return Err("Incorrect postion".to_owned())
+                unreachable!();
             }   
         },
     }
-    Ok(())
 }
-
-/*
-fn read_bit_sequence(file: &File, lenth: usize){
-
-}*/
-
-/*
-fn write_bit_sequence(file: &mut File, write: Vec<bool>){
-    let mut index = 0;
-    let mut num: u8 = 0;
-    for b in write.iter(){
-        set_bit(&mut num, index, b).unwrap();
-        index += 1;
-        if index == 8{
-            println!("{}", &num);
-            file.write(&[num]).unwrap();
-            index = 0;
-            num = 0;
-        }
-        
-    }
-    if index != 8{
-        println!("{}", &num);
-        file.write(&[num]).unwrap();
-    }
-}*/

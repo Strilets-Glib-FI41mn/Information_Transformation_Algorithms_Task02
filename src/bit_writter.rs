@@ -10,7 +10,7 @@ impl FileBitWriter{
     pub fn write_bits(&mut self, input: Vec<bool>)  -> std::io::Result<usize> {
         let mut written = 0;
         for b in input.iter(){
-            crate::set_bit(&mut self.buffer, self.buff_index, b).unwrap();
+            crate::set_bit(&mut self.buffer, self.buff_index, b);
             written += 1;
             self.buff_index += 1;
             if self.buff_index == 8{
