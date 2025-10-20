@@ -9,7 +9,6 @@ enum MyErr {
 
 fn bool_vec_impl(input: TokenStream) -> Result<TokenStream, MyErr> {
     //let tokens: Vec<TokenTree> = input.into_iter().collect();
-    let first = true;
     let mut result = "vec![".to_string();
     let mut chars = input.into_iter().filter_map(|token| {
         if let proc_macro::TokenTree::Literal(literal) = token{

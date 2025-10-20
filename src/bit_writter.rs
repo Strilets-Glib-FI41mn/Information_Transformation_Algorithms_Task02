@@ -14,7 +14,9 @@ impl FileBitWriter{
             written += 1;
             self.buff_index += 1;
             if self.buff_index == 8{
-                println!("{}", &self.buffer);
+                if cfg!(feature = "debug_data"){
+                    println!("bit writter buffer {}", &self.buffer);
+                }
                 self.file.write(&[self.buffer])?;
                 self.buff_index = 0;
                 self.buffer = 0;
@@ -31,7 +33,9 @@ impl FileBitWriter{
 impl Drop for FileBitWriter {
     fn drop(&mut self) {
         if self.buff_index != 0 {
-            println!("dropping last: {}", self.buffer);
+            if cfg!(feature = "debug_data"){
+                println!("dropping last writter buffer {}", &self.buffer);
+            }
             self.file.write(&[self.buffer]).unwrap();
         }
     }

@@ -5,3 +5,6 @@ edition = "2024"
 
 [dependencies]
 bool_vec = { path = "bool_vec" }
+
+[features]
+debug_data = []
