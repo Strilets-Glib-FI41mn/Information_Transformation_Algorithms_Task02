@@ -10,7 +10,7 @@ impl FileBitWriter{
     pub fn write_bits(&mut self, input: Vec<bool>)  -> std::io::Result<usize> {
         let mut written = 0;
         for b in input.iter(){
-            crate::set_bit(&mut self.buffer, self.buff_index, b);
+            set_bit(&mut self.buffer, self.buff_index, b);
             written += 1;
             self.buff_index += 1;
             if self.buff_index == 8{
@@ -34,5 +34,38 @@ impl Drop for FileBitWriter {
             println!("dropping last: {}", self.buffer);
             self.file.write(&[self.buffer]).unwrap();
         }
+    }
+}
+
+fn set_bit(byte: &mut u8, pos: u8, val: &bool){
+    match val{
+        &true => {
+            match pos{
+                0 =>{*byte |= 0b1000_0000},
+                1 =>{*byte |= 0b0100_0000},
+                2 =>{*byte |= 0b0010_0000},
+                3 =>{*byte |= 0b0001_0000},
+                4 =>{*byte |= 0b0000_1000},
+                5 =>{*byte |= 0b0000_0100},
+                6 =>{*byte |= 0b0000_0010},
+                7 =>{*byte |= 0b0000_0001},
+                _ =>{
+                    unreachable!();
+                }   
+            }
+        },
+        &false => match pos{
+            0 =>{*byte &= 0b0111_1111},
+            1 =>{*byte &= 0b1011_1111},
+            2 =>{*byte &= 0b1101_1111},
+            3 =>{*byte &= 0b1110_1111},
+            4 =>{*byte &= 0b1111_0111},
+            5 =>{*byte &= 0b1111_1011},
+            6 =>{*byte &= 0b1111_1101},
+            7 =>{*byte &= 0b1111_1110},
+            _ =>{
+                unreachable!();
+            }   
+        },
     }
 }
