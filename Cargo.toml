@@ -10,3 +10,4 @@ inquire-derive = "0.9.1"
 
 [features]
 debug_data = []
+write_foo = []

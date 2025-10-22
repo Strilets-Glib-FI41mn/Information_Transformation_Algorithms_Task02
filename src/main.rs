@@ -34,6 +34,15 @@ impl Display for Action{
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>>  {
+    if cfg!(feature = "write_foo"){
+        let file = File::create("foo").unwrap();
+        let mut file_writter = FileBitWriter::new(file);
+        file_writter.write_bits(bool_vec!(0110_0000_1))?;
+        file_writter.write_bits(bool_vec!(1110_0000_1))?;
+        file_writter.write_bits(bool_vec_from_string("1100_1100_1"))?;
+        drop(file_writter);
+    }
+
     let mut file_writter: Option<FileBitWriter> = None;
     let mut file_reader: Option<FileBitReader> = None;
     let mut state = State::Started;
@@ -72,7 +81,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
                 if let Some(reader) = &mut file_reader{
                     let input_string =  inquire::Text::new("How many bits?:").prompt().unwrap();
                     let len = input_string.parse().expect("Not a valid number");
-                    let result = reader.read_bits(len);
+                    let result = reader.read_bits_binary(len);
                     println!("Read value: {:?}", result);
 
                 }
@@ -83,31 +92,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
         }
     }
 
-    //compile_error!();
-    let file = File::create("foo").unwrap();
-    let mut file_writter = FileBitWriter::new(file);
-    file_writter.write_bits(bool_vec!(0110_0000_1))?;
-    file_writter.write_bits(bool_vec!(1110_0000_1))?;
-    file_writter.write_bits(bool_vec_from_string("1100_1100_1"))?;
+
+    /*
     
     file_writter.write_bits(bool_vec!(1111))?;
     let file = File::open("foo").unwrap();
     let mut file_reader = FileBitReader::new(file);
     println!("{:?}",file_reader.read_bits(3));
     println!("{:?}",file_reader.read_bits(5));
-    //println!("{:?}",file_reader.read_bits(8));
     println!("{:?}",file_reader.read_bits(10));
     println!("{:?}",file_reader.read_bits(6));
-    
-    /*
 
-
-    file_writter.write_bits(bool_vec!(1110));
-
-    file_writter.write_bits(bool_vec!(1111));
-    println!("{:?}",file_reader.read_bits(2));
-    println!("{:?}",file_reader.read_bits(6));
-     */
+    */
     Ok(())
 }
 

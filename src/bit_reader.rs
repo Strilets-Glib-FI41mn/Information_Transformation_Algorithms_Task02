@@ -13,15 +13,17 @@ impl FileBitReader{
             println!("self.buff_index: {:?}", self.buff_index);
         }
         let left_in_buffer = 8 - self.buff_index.unwrap_or(8);
-        let (required_bits, all_bytes_output, required_bytes) = {match len < left_in_buffer {
-            true => (0, false, 0),
-            false => {
-                let required_bits = len - left_in_buffer;
-                let all_bytes_output = required_bits % 8 == 0;
-                (required_bits, all_bytes_output, (required_bits) / 8 + {match all_bytes_output {true => 0, false => 1}})
+        if len < left_in_buffer{
+            for i in 0..len{
+                let j = i + self.buff_index.unwrap_or(0);
+                result.push((self.buffer >> 7 - j) & 1 == 1);
             }
-        }};
-        //let required_bits = len - self.buff_index.unwrap_or(0);
+            self.buff_index = Some(self.buff_index.unwrap_or(0) + len);
+            return Ok(result);
+        }
+        let required_bits = len - left_in_buffer;
+        let all_bytes_output = required_bits % 8 == 0;
+        let required_bytes = (required_bits) / 8 + {match all_bytes_output {true => 0, false => 1}};
         let mut buffer =vec![0; required_bytes];
 
         if cfg!(feature = "debug_data"){
@@ -65,5 +67,10 @@ impl FileBitReader{
     }
     pub fn new(file: File) -> Self{
         Self {buf_reader: BufReader::new(file), buff_index: None, buffer: 0 }
+    }
+    pub fn read_bits_binary(&mut self, len: usize)  -> std::io::Result<String>{
+        let result = self.read_bits(len)?;
+        let result:String = result.iter().map(|x| {match x {true => '1', false => '0'}}).collect();
+        Ok(result)
     }
 }
