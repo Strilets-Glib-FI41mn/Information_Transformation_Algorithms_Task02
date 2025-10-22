@@ -13,13 +13,15 @@ impl FileBitReader{
             println!("self.buff_index: {:?}", self.buff_index);
         }
         let left_in_buffer = 8 - self.buff_index.unwrap_or(8);
-        let required_bits = {match len < left_in_buffer {
-            true => 0,
-            false => len - left_in_buffer
+        let (required_bits, all_bytes_output, required_bytes) = {match len < left_in_buffer {
+            true => (0, false, 0),
+            false => {
+                let required_bits = len - left_in_buffer;
+                let all_bytes_output = required_bits % 8 == 0;
+                (required_bits, all_bytes_output, (required_bits) / 8 + {match all_bytes_output {true => 0, false => 1}})
+            }
         }};
         //let required_bits = len - self.buff_index.unwrap_or(0);
-        let all_bytes_output = required_bits % 8 == 0;
-        let required_bytes = (required_bits) / 8 + {match all_bytes_output {true => 0, false => 1}};
         let mut buffer =vec![0; required_bytes];
 
         if cfg!(feature = "debug_data"){
