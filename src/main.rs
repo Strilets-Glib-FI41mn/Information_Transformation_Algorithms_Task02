@@ -10,8 +10,6 @@ use inquire_derive::Selectable;
 #[derive(PartialEq)]
 enum State{
     Started,
-    Writting,//(Option<FileBitWriter>),
-    Reading,//(Option<FileBitReader>),
     Exiting
 }
 #[derive(Debug, Copy, Clone, Selectable)]
@@ -64,7 +62,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
                 }
                 let data =  inquire::Text::new("Data:").prompt().unwrap();
                 if let Some(writter) = & mut file_writter{
-                    writter.write_bits(bool_vec_from_string(&data));
+                    let _ = writter.write_bits(bool_vec_from_string(&data));
                 }
             }
 
@@ -82,7 +80,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
                     let input_string =  inquire::Text::new("How many bits?:").prompt().unwrap();
                     let len = input_string.parse().expect("Not a valid number");
                     let result = reader.read_bits_binary(len);
-                    println!("Read value: {:?}", result);
+                    match result{
+                        Ok(text) => println!("{}", text),
+                        Err(er) => println!("{}", er)
+                    }
+                    //println!("{:?}", result);
 
                 }
             }
