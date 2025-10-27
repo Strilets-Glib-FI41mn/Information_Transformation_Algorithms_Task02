@@ -1,12 +1,10 @@
 use std::{fmt::Display, fs::File};
 
-use bit_reader::FileBitReader;
-use bit_writter::FileBitWriter;
-mod bit_writter;
-mod bit_reader;
+use task2::bit_reader::FileBitReader;
+use task2::bit_writter::FileBitWriter;
 use bool_vec::bool_vec;
 use inquire_derive::Selectable;
-//use inquire::{error::InquireError, Select};
+
 #[derive(PartialEq)]
 enum State{
     Started,
@@ -30,6 +28,8 @@ impl Display for Action{
         }
     }
 }
+
+use task2::bool_vec_from_string;
 
 fn main() -> Result<(), Box<dyn std::error::Error>>  {
     if cfg!(feature = "write_foo"){
@@ -93,31 +93,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
             }
         }
     }
-
-
-    /*
-    
-    file_writter.write_bits(bool_vec!(1111))?;
-    let file = File::open("foo").unwrap();
-    let mut file_reader = FileBitReader::new(file);
-    println!("{:?}",file_reader.read_bits(3));
-    println!("{:?}",file_reader.read_bits(5));
-    println!("{:?}",file_reader.read_bits(10));
-    println!("{:?}",file_reader.read_bits(6));
-
-    */
     Ok(())
-}
-
-
-fn bool_vec_from_string(input: &str) -> Vec<bool>{
-    input.chars().filter_map(|ch|{
-        match ch{
-            '_' => None,
-            '0' => Some(false),
-            '1' => Some(true),
-            _ => {panic!("Bool vector is created from 0s and 1s!")}
-        }
-    })
-    .collect()
 }
