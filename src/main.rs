@@ -1,7 +1,7 @@
 use std::{fmt::Display, fs::File};
 
-use task2::bit_reader::FileBitReader;
-use task2::bit_writter::FileBitWriter;
+use bit_writer_reader::bit_reader::FileBitReader;
+use bit_writer_reader::bit_writter::FileBitWriter;
 use bool_vec::bool_vec;
 use inquire_derive::Selectable;
 
@@ -29,7 +29,7 @@ impl Display for Action{
     }
 }
 
-use task2::bool_vec_from_string;
+use bit_writer_reader::bool_vec_from_string;
 
 fn main() -> Result<(), Box<dyn std::error::Error>>  {
     if cfg!(feature = "write_foo"){
