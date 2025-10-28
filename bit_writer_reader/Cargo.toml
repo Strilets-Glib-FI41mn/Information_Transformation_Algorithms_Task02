@@ -1,0 +1,11 @@
+[package]
+name = "bit_writer_reader"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bool_vec = { path = "bool_vec" }
+
+[features]
+bool_vec_macro = []
+debug_data = []

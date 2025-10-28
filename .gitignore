@@ -1,3 +1,4 @@
 Cargo.lock
 /target
 /bool_vec/target
+/bit_writer_reader/bool_vec/target

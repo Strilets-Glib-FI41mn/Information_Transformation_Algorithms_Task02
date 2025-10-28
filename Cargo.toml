@@ -1,14 +1,14 @@
 [package]
 name = "task2"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
-bool_vec = { path = "bool_vec" }
+bit_writer_reader = {path = "bit_writer_reader"}
+bool_vec = { path = "bit_writer_reader/bool_vec" }
 inquire = "0.9.1"
 inquire-derive = "0.9.1"
 
 [features]
-debug_data = []
 write_foo = []
-bool_vec_macro = []
+#bool_vec_macro = []
