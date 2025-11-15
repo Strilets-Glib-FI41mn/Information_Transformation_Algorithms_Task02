@@ -35,9 +35,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
     if cfg!(feature = "write_foo"){
         let file = File::create("foo").unwrap();
         let mut file_writter = FileBitWriter::new(file);
-        file_writter.write_bits(bool_vec!(0110_0000_1))?;
-        file_writter.write_bits(bool_vec!(1110_0000_1))?;
-        file_writter.write_bits(bool_vec_from_string("1100_1100_1"))?;
+        file_writter.write_bits(&bool_vec!(0110_0000_1))?;
+        file_writter.write_bits(&bool_vec!(1110_0000_1))?;
+        file_writter.write_bits(&bool_vec_from_string("1100_1100_1"))?;
         drop(file_writter);
     }
 
@@ -62,7 +62,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
                 }
                 let data =  inquire::Text::new("Data:").prompt().unwrap();
                 if let Some(writter) = & mut file_writter{
-                    let _ = writter.write_bits(bool_vec_from_string(&data));
+                    let _ = writter.write_bits(&bool_vec_from_string(&data));
                 }
             }
 

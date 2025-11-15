@@ -7,7 +7,7 @@ pub struct FileBitWriter{
 }
 
 impl FileBitWriter{
-    pub fn write_bits(&mut self, input: Vec<bool>)  -> std::io::Result<usize> {
+    pub fn write_bits(&mut self, input: &[bool])  -> std::io::Result<usize> {
         let mut written = 0;
         for b in input.iter(){
             set_bit(&mut self.buffer, self.buff_index, b);
@@ -71,5 +71,47 @@ fn set_bit(byte: &mut u8, pos: u8, val: &bool){
                 unreachable!();
             }   
         },
+    }
+}
+
+
+pub struct BitWriter<O: Write>{
+    pub output: O,
+    buff_index: u8,
+    buffer: u8
+}
+
+impl<O: Write> BitWriter<O>{
+    pub fn write_bits(&mut self, input: &[bool])  -> std::io::Result<usize> {
+        let mut written = 0;
+        for b in input.iter(){
+            set_bit(&mut self.buffer, self.buff_index, b);
+            written += 1;
+            self.buff_index += 1;
+            if self.buff_index == 8{
+                if cfg!(feature = "debug_data"){
+                    println!("bit writter buffer {}", &self.buffer);
+                }
+                self.output.write(&[self.buffer])?;
+                self.buff_index = 0;
+                self.buffer = 0;
+            }
+            
+        }
+        Ok(written)
+    }
+    pub fn new(output: O) -> Self{
+        Self { output, buff_index: 0, buffer: 0 }
+    }
+}
+
+impl<O: Write> Drop for BitWriter<O> {
+    fn drop(&mut self) {
+        if self.buff_index != 0 {
+            if cfg!(feature = "debug_data"){
+                println!("dropping last writter buffer {}", &self.buffer);
+            }
+            self.output.write(&[self.buffer]).unwrap();
+        }
     }
 }
