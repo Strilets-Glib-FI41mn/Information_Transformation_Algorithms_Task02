@@ -104,7 +104,7 @@ impl<O: Write> BitWriter<O>{
         Self { output, buff_index: 0, buffer: 0 }
     }
     pub fn get_padding(&self) -> usize{
-        let padding = 8 - self.buff_index;
+        let padding = (8 - self.buff_index) % 8;
         return padding.into();
     }
 }
