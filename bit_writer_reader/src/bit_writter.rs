@@ -103,6 +103,11 @@ impl<O: Write> BitWriter<O>{
     pub fn new(output: O) -> Self{
         Self { output, buff_index: 0, buffer: 0 }
     }
+    pub fn drop_padding(&mut self) -> usize{
+        let padding = 8 - self.buff_index;
+        let _ = self;
+        return padding.into();
+    }
 }
 
 impl<O: Write> Drop for BitWriter<O> {
